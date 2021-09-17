@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 from enum import Enum, auto
 
 
@@ -6,6 +7,36 @@ class Status(Enum):
     INIT = auto()
     RUNNING = auto()
     SUSPENDED = auto()
+
+
+class TimeKeeper(object):
+    def __init__(self):
+        self.start_time = None
+        self.hold_time = None
+
+    def start(self):
+        self.start_time = time.perf_counter()
+
+    def stop(self):
+        if self.start_time is None:
+            return
+        if self.hold_time is None:
+            self.hold_time = time.perf_counter() - self.start_time
+        else:
+            self.hold_time = self.hold_time + time.perf_counter() - self.start_time
+        self.start_time = None
+
+    def elapsed_time(self):
+        if self.start_time is None and self.hold_time is None:
+            return 0
+        if self.start_time is None:
+            return self.hold_time
+        if self.start_time is not None:
+            return time.perf_counter() - self.start_time + self.hold_time
+
+    def reset(self):
+        self.start_time = None
+        self.hold_time = None
 
 
 class Context(object):
@@ -83,6 +114,18 @@ class SuspendedState(IState):
 
 
 if __name__ == '__main__':
+    # time_keeper = TimeKeeper()
+    # time_keeper.start()
+    # time.sleep(3)
+    # time_keeper.stop()
+    # print(f'elapsed_time: {time_keeper.elapsed_time()}')
+    # time_keeper.start()
+    # time.sleep(2)
+    # print(f'elapsed_time: {time_keeper.elapsed_time()}')
+    # time.sleep(1)
+    # time_keeper.stop()
+    # print(f'elapsed_time: {time_keeper.elapsed_time()}')
+
     window = tk.Tk()
     window.geometry('600x600')
     elapsed_time = tk.Label(text=u'00:00:00')
