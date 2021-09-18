@@ -14,7 +14,7 @@ class Gui(object):
         self.window.resizable(width=False, height=False)
 
         # display elapsed time
-        self.frame_top = tk.Frame(self.window, borderwidth=10, relief='sunken')
+        self.frame_top = tk.Frame(self.window)
         self.frame_top.pack(expand=True, fill=tk.BOTH)
         self.time_text = tk.StringVar()
         self.time_text.set('00:00:00')
@@ -22,18 +22,20 @@ class Gui(object):
         self.elapsed_time.pack(expand=True, fill=tk.X)
 
         # place buttons
-        self.frame_bottom = tk.Frame(self.window, borderwidth=10, relief='sunken')
+        self.frame_bottom = tk.Frame(self.window)
         self.frame_bottom.pack(expand=True, fill=tk.BOTH)
         self.start_stop_button_text = tk.StringVar()
         self.start_stop_button_text.set('Start')
         self.start_stop_button = tk.Button(self.frame_bottom, textvariable=self.start_stop_button_text, width=5,
                                            font=("", "40", "bold"))
-        self.ctx = Context(self)
-        self.start_stop_button.bind('<Button-1>', self.ctx.on_click_start_stop_button)
+
         self.start_stop_button.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
         self.reset_button = tk.Button(self.frame_bottom, text=u'Reset', width=5, font=("", "40", "bold"))
-        self.reset_button.bind('<Button-1>', self.ctx.on_click_reset_button)
+
         self.reset_button.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
+        self.ctx = Context(self)
+        self.start_stop_button.bind('<Button-1>', self.ctx.on_click_start_stop_button)
+        self.reset_button.bind('<Button-1>', self.ctx.on_click_reset_button)
 
         self.window.after(DISPLAY_INTERVAL, self.__update_time)
         self.window.mainloop()
@@ -49,3 +51,9 @@ class Gui(object):
 
     def set_start_stop_button_text(self, s):
         self.start_stop_button_text.set(s)
+
+    def disable_reset_button(self):
+        self.reset_button['state'] = 'disabled'
+
+    def enable_reset_button(self):
+        self.reset_button['state'] = 'normal'

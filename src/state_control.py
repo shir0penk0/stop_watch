@@ -16,6 +16,7 @@ class InitState(IState):
     def __init__(self, gui):
         super().__init__()
         gui.set_start_stop_button_text('Start')
+        gui.disable_reset_button()
 
     def start_stop(self, context, time_keeper):
         print('[InitState] On start_stop button click')
@@ -31,6 +32,7 @@ class RunningState(IState):
     def __init__(self, gui):
         super().__init__()
         gui.set_start_stop_button_text('Stop')
+        gui.disable_reset_button()
 
     def start_stop(self, context, time_keeper):
         print('[RunningState] On start_stop button click')
@@ -46,6 +48,7 @@ class SuspendedState(IState):
     def __init__(self, gui):
         super().__init__()
         gui.set_start_stop_button_text('Restart')
+        gui.enable_reset_button()
 
     def start_stop(self, context, time_keeper):
         print('[SuspendedState] On start_stop button click')
