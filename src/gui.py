@@ -8,52 +8,53 @@ DISPLAY_INTERVAL = 10
 class Gui(object):
     def __init__(self):
         # window settings
-        self.window = tk.Tk()
-        self.window.title(u'Stop watch')
-        self.window.geometry('500x200')
-        self.window.resizable(width=False, height=False)
+        self.__window = tk.Tk()
+        self.__window.title(u'Stop watch')
+        self.__window.geometry('500x200')
+        self.__window.resizable(width=False, height=False)
 
         # display elapsed time
-        self.frame_top = tk.Frame(self.window)
-        self.frame_top.pack(expand=True, fill=tk.BOTH)
-        self.time_text = tk.StringVar()
-        self.time_text.set('00:00:00')
-        self.elapsed_time = tk.Label(self.frame_top, textvariable=self.time_text, font=("Osaka-Mono", "80", "bold"))
-        self.elapsed_time.pack(expand=True, fill=tk.X)
+        self.__frame_top = tk.Frame(self.__window)
+        self.__frame_top.pack(expand=True, fill=tk.BOTH)
+        self.__time_text = tk.StringVar()
+        self.__time_text.set('00:00:00')
+        self.__elapsed_time = tk.Label(self.__frame_top, textvariable=self.__time_text,
+                                       font=("Osaka-Mono", "80", "bold"))
+        self.__elapsed_time.pack(expand=True, fill=tk.X)
 
         # place buttons
-        self.frame_bottom = tk.Frame(self.window)
-        self.frame_bottom.pack(expand=True, fill=tk.BOTH)
-        self.start_stop_button_text = tk.StringVar()
-        self.start_stop_button_text.set('Start')
-        self.start_stop_button = tk.Button(self.frame_bottom, textvariable=self.start_stop_button_text, width=5,
-                                           font=("", "40", "bold"))
+        self.__frame_bottom = tk.Frame(self.__window)
+        self.__frame_bottom.pack(expand=True, fill=tk.BOTH)
+        self.__start_stop_button_text = tk.StringVar()
+        self.__start_stop_button_text.set('Start')
+        self.__start_stop_button = tk.Button(self.__frame_bottom, textvariable=self.__start_stop_button_text, width=5,
+                                             font=("", "40", "bold"))
 
-        self.start_stop_button.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-        self.reset_button = tk.Button(self.frame_bottom, text=u'Reset', width=5, font=("", "40", "bold"))
+        self.__start_stop_button.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+        self.__reset_button = tk.Button(self.__frame_bottom, text=u'Reset', width=5, font=("", "40", "bold"))
 
-        self.reset_button.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
-        self.ctx = Context(self)
-        self.start_stop_button.bind('<Button-1>', self.ctx.on_click_start_stop_button)
-        self.reset_button.bind('<Button-1>', self.ctx.on_click_reset_button)
+        self.__reset_button.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
+        self.__ctx = Context(self)
+        self.__start_stop_button.bind('<Button-1>', self.__ctx.on_click_start_stop_button)
+        self.__reset_button.bind('<Button-1>', self.__ctx.on_click_reset_button)
 
-        self.window.after(DISPLAY_INTERVAL, self.__update_time)
-        self.window.mainloop()
+        self.__window.after(DISPLAY_INTERVAL, self.__update_time)
+        self.__window.mainloop()
 
     def __update_time(self):
-        t = self.ctx.get_elapsed_time()
+        t = self.__ctx.get_elapsed_time()
         h = int(t / 3600)
         m = int((t / 60) % 60)
         s = int(t % 60)
-        ms = int((t - int(t)) * 100)
-        self.time_text.set('{:02d}:{:02d}:{:02d}.{:02d}'.format(h, m, s, ms))
-        self.window.after(DISPLAY_INTERVAL, self.__update_time)
+        ten_ms = int((t - int(t)) * 100)
+        self.__time_text.set('{:02d}:{:02d}:{:02d}.{:02d}'.format(h, m, s, ten_ms))
+        self.__window.after(DISPLAY_INTERVAL, self.__update_time)
 
     def set_start_stop_button_text(self, s):
-        self.start_stop_button_text.set(s)
+        self.__start_stop_button_text.set(s)
 
     def disable_reset_button(self):
-        self.reset_button['state'] = 'disabled'
+        self.__reset_button['state'] = 'disabled'
 
     def enable_reset_button(self):
-        self.reset_button['state'] = 'normal'
+        self.__reset_button['state'] = 'normal'
