@@ -38,17 +38,18 @@ class Gui(object):
         self.__start_stop_button.bind('<Button-1>', self.__ctx.on_click_start_stop_button)
         self.__reset_button.bind('<Button-1>', self.__ctx.on_click_reset_button)
 
-        self.__window.after(DISPLAY_INTERVAL, self.__update_time)
+        self.__window.after(DISPLAY_INTERVAL, self.update_time)
         self.__window.mainloop()
 
-    def __update_time(self):
+    def update_time(self):
         t = self.__ctx.get_elapsed_time()
         h = int(t / 3600)
         m = int((t / 60) % 60)
         s = int(t % 60)
         ten_ms = int((t - int(t)) * 100)
         self.__time_text.set('{:02d}:{:02d}:{:02d}.{:02d}'.format(h, m, s, ten_ms))
-        self.__window.after(DISPLAY_INTERVAL, self.__update_time)
+        if self.__ctx.need_display_update() is True:
+            self.__window.after(DISPLAY_INTERVAL, self.update_time)
 
     def set_start_stop_button_text(self, s):
         self.__start_stop_button_text.set(s)
